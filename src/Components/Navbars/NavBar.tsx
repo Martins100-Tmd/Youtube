@@ -7,31 +7,33 @@ const NavBarComponent = () => {
       className={`flex flex-row items-center w-full p-4 justify-between border-b-4 border-zinc-700 bg-[#121212]
       `}
     >
-      <div className={`flex flex-row items-center sm:w-[15%] w-2/5`}>
-        <i
-          className={`
+      <div className={"sm:w-[30%]"}>
+        <div className={`flex flex-row items-center sm:w-[17%] w-2/5`}>
+          <i
+            className={`
             text-white
           text-4xl self-end material-icons sm:flex hidden`}
-        >
-          menu
-        </i>
-        <div className="flex flex-row items-center self-center sm:ml-3">
-          <img
-            src={ytb}
-            className={`object-cover self-end  w-10 h-10 sm:hidden flex`}
-            alt={`youtube_icon`}
-          />
-          <h1
-            className={`sm:text-[23px] text-[18px] leading-8 font-medium font-rob self-center text-white
-            `}
           >
-            You<span className="text-red-600">Tube</span>
-          </h1>
+            menu
+          </i>
+          <div className="flex flex-row items-center self-center sm:ml-5">
+            <img
+              src={ytb}
+              className={`object-cover self-end  w-10 h-10 sm:hidden flex`}
+              alt={`youtube_icon`}
+            />
+            <h1
+              className={`sm:text-[23px] text-[18px] leading-8 font-medium font-rob self-center text-white
+            `}
+            >
+              You<span className="text-red-600">Tube</span>
+            </h1>
+          </div>
         </div>
       </div>
       <div className="w-[53%] ml-0">
         <div
-          className={`sm:flex flex-row sm:w-[65%] ml-0 items-stretch hidden  outline-[1px]
+          className={`sm:flex flex-row sm:w-[60%] ml-0 items-stretch hidden  outline-[1px]
         outline outline-zinc-500
         `}
         >

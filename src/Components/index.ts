@@ -5,8 +5,12 @@ import ytb from "../assets/ytb.png";
 import femProfile from "../assets/femProfile.png";
 import femProfile_w from "../assets/femProfile(w).png";
 import ytbprofile from "../assets/ytbprofile.jpg";
+import vid from "../assets/vid.jpg";
 
-export { ytb, femProfile, femProfile_w, ytbprofile };
+//assets/Recommended
+import Movie from "../assets/Recommended/Movies.jpg";
+
+export { ytb, femProfile, femProfile_w, ytbprofile, vid, Movie };
 
 // ===== Component ========
 // utils
@@ -21,6 +25,15 @@ export { default as Categories } from "./Navbars/Category";
 export { default as SideLeft } from "./Sidebars/SideLeft";
 export { default as SideBottom } from "./Sidebars/SideBottom";
 
+//Videos
+export { default as RecommendedVids } from "./Videos/Recommended";
+export { default as VideoGridComponent } from "./Videos/VidGrid";
+
+//Effect
+export { default as PromiseResponseComponent } from "./Effect/Effect.tsx";
+
+//VideoCard
+export { default as VideoCards } from "./Videocard/Vidcard.tsx";
 // ====== Pages =========
 //Home
 export { default as Homepage } from "../Pages/Home";
