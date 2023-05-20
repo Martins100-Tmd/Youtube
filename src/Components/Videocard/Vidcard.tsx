@@ -1,4 +1,4 @@
-import { PromiseResponseComponent, RecommendedVids } from "..";
+import { PromiseResponseComponent, RecommendedVids, vid } from "..";
 import ApiContext from "../../Context/Api";
 import { useContext } from "react";
 import { numberToCurrency } from "../utils/data";
@@ -10,11 +10,12 @@ const VideoCard = () => {
     loaded = true;
     VideoCardLists = apiState.element.map((item: any, index: number) => {
       return (
-        <div key={index}>
+        <div key={index} className="w-full">
           <RecommendedVids
             title={item.snippet.title}
             channel={item.snippet.channelTitle}
-            image={item.snippet.thumbnails.high.url}
+            // image={item.snippet.thumbnails.high.url}
+            image={vid}
             screen={{
               height: item.snippet.thumbnails.high.height,
               width: item.snippet.thumbnails.high.width,
@@ -27,14 +28,15 @@ const VideoCard = () => {
     });
   } else {
     loaded = false;
-    VideoCardLists = PromiseResponseComponent.loading;
+    VideoCardLists = PromiseResponseComponent;
   }
   return loaded ? (
-    <section className="w-full overflow-scroll grid lg:grid-cols-4 md:grid-cols-3">
-      {VideoCardLists}
-    </section>
+    <section className="w-full grid md:grid-cols-3 xl:grid-cols-4">{VideoCardLists}</section>
   ) : (
-    <section className="w-full overflow-scroll">{VideoCardLists}</section>
+    <section className="w-full overflow-scroll">
+      <div>{VideoCardLists.loading}</div>
+      <div>{VideoCardLists.error}</div>
+    </section>
   );
 };
 export default VideoCard;

@@ -13,16 +13,18 @@ export const ApiContextProvider = ({ children }: { children: ReactNode }) => {
     element: null,
   });
   let { status, data } = useQuery({
+    enabled: navigator.onLine,
     queryKey: ["posts"],
     queryFn: fetchYoutubeFn,
   });
   useEffect(() => {
     fetchLoop().then((res) => res);
-    if (status === "loading")
+    if (status === "loading" && navigator.onLine)
       setApiState({ status_: "loading", element: PromiseResponseComponent.loading });
-    if (status === "error")
-      setApiState({ status_: "error", element: PromiseResponseComponent.loading });
-    if (status === "success") setApiState({ status_: "success", element: data });
+    if (status === "error" || !navigator.onLine)
+      setApiState({ status_: "error", element: PromiseResponseComponent });
+    if (status === "success" || navigator.onLine)
+      setApiState({ status_: "success", element: data });
   }, [status, newRequestSignal]);
   const signalReFetch = () => {
     setNewRequestSignal(Math.floor(Math.random() * 500));

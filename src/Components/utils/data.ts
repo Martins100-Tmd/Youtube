@@ -1,38 +1,58 @@
-const API =
-  "https://www.googleapis.com/youtube/v3/videos?key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0&part=snippet&chart=mostpopular&maxResult=50&regionCode=US";
+const API = `https://www.googleapis.com/youtube/v3/videos?key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0&part=snippet&
+  chart=mostpopular&maxResult=50&regionCode=US`;
 
 const API_stat = (mole: string) => {
   return `
 https://www.googleapis.com/youtube/v3/channels?id=${mole}&part=statistics,id&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0`;
 };
+
+const ChannelProfile = `
+https://www.googleapis.com/youtube/v3/channels?part=snippet&id=UC_x5XG1OV2P6uZZ5FSM9Ttw&
+fields=items(snippet(thumbnails(high(url))))&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0
+`;
+fetch(ChannelProfile)
+  .then((res) => res.json())
+  .then((data) => console.log(data));
+/**
+ *
+ * @param mole - number
+ * @returns: string(in currency format)
+ */
 const numberToCurrency = (mole: number) => {
   let numberLength = String(mole).length;
   let some;
-  if (numberLength === 3) {
-    return numberLength;
-  } else if (numberLength === 4) {
-    some = String(mole).substring(0, 1);
-    return some + "k";
-  } else if (numberLength === 5) {
-    some = String(mole).substring(0, 2);
-    return some + "k";
-  } else if (numberLength === 6) {
-    some = String(mole).substring(0, 3);
-    return some + "k";
-  } else if (numberLength === 7) {
-    some = String(mole).substring(0, 1);
-    return some + "M";
-  } else if (numberLength === 8) {
-    some = String(mole).substring(0, 2);
-    return some + "M";
-  } else if (numberLength === 9) {
-    some = String(mole).substring(0, 3);
-    return some + "M";
+  switch (numberLength) {
+    case 3:
+      return numberLength;
+    case 4:
+      some = String(mole).substring(0, 1);
+      return some + "k";
+    case 5:
+      some = String(mole).substring(0, 2);
+      return some + "k";
+    case 6:
+      some = String(mole).substring(0, 3);
+      return some + "k";
+    case 7:
+      some = String(mole).substring(0, 1);
+      return some + "M";
+    case 8:
+      some = String(mole).substring(0, 2);
+      return some + "M";
+    case 9:
+      some = String(mole).substring(0, 3);
+      return some + "M";
+    case 10:
+      some = String(mole).substring(0, 2);
+      return some + "B";
   }
 };
+/**
+ * fetchLoop - async function
+ */
 const fetchLoop = async () => {
-  const [firstFetchRequest] = [await fetch(API)];
-  const [responseJson] = [await firstFetchRequest.json()];
+  const firstFetchRequest = await fetch(API);
+  const responseJson = await firstFetchRequest.json();
   let nextPageToken = responseJson.nextPageToken,
     Hash: any = {},
     res = JSON.parse(localStorage.getItem("Results") || "[]"),
@@ -98,7 +118,6 @@ const Fn = () => {
 
 const fetchYoutubeFn = async () => {
   const A = await Fn();
-  console.log(A);
   return A;
 };
 

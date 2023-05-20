@@ -25,9 +25,16 @@ const LoadingComponent = () => {
     </section>
   );
 };
-
+const ErrorComponent = () => {
+  return (
+    <footer className="flex justify-center shadow rounded-sm p-3 bg-red-600 text-white fixed bottom-0 w-full left-0">
+      <p className="text-center text-base font-thin font-hev">Oops!, No connection</p>
+    </footer>
+  );
+};
 const ComponentsResponse = {
   loading: <LoadingComponent />,
+  error: <ErrorComponent />,
 };
 
 export default ComponentsResponse;
