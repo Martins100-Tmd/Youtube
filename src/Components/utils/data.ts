@@ -1,16 +1,17 @@
-const API = `https://www.googleapis.com/youtube/v3/videos?key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0&part=snippet&
-  chart=mostpopular&maxResult=50&regionCode=US`;
+const API = `https://www.googleapis.com/youtube/v3/videos?key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0&part=snippet&chart=mostpopular&maxResult=50&regionCode=US`;
 
 const API_stat = (mole: string) => {
   return `
 https://www.googleapis.com/youtube/v3/channels?id=${mole}&part=statistics,id&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0`;
 };
 
-const ChannelProfile = `
-https://www.googleapis.com/youtube/v3/channels?part=snippet&id=UC_x5XG1OV2P6uZZ5FSM9Ttw&
-fields=items(snippet(thumbnails(high(url))))&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0
-`;
-fetch(ChannelProfile)
+// const ChannelProfile = `
+// https://www.googleapis.com/youtube/v3/channels?part=snippet&id=UC_x5XG1OV2P6uZZ5FSM9Ttw&
+// fields=items(snippet(thumbnails(high(url))))&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0
+// `;
+fetch(
+  "https://www.googleapis.com/youtube/v3/channels?id=UCmBA_wu8xGg1OfOkfW13Q0Q&part=statistics,id&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0"
+)
   .then((res) => res.json())
   .then((data) => console.log(data));
 /**
@@ -51,76 +52,53 @@ const numberToCurrency = (mole: number) => {
  * fetchLoop - async function
  */
 const fetchLoop = async () => {
+  let fetchOrder = 0;
   const firstFetchRequest = await fetch(API);
+  if (firstFetchRequest.ok) {
+    fetchOrder = 1;
+    localStorage.setItem("Results", JSON.stringify([]));
+    localStorage.setItem("stat", JSON.stringify([]));
+  }
   const responseJson = await firstFetchRequest.json();
   let nextPageToken = responseJson.nextPageToken,
     Hash: any = {},
     res = JSON.parse(localStorage.getItem("Results") || "[]"),
-    stat = JSON.parse(localStorage.getItem("stat") || "[]"),
-    freq = 0;
-  while (nextPageToken) {
-    if (Hash[nextPageToken] === undefined) {
-      Hash[nextPageToken] = 1;
-      const A = await fetch(API + "&pageToken=" + nextPageToken);
-      const B = await A.json();
-      nextPageToken = B.nextPageToken;
-      B.items.forEach((item: any) => {
-        stat.push(item.snippet.channelId);
-      });
-      localStorage.setItem("stat", JSON.stringify(stat));
-      res.push(...B.items);
-      localStorage.setItem("Results", JSON.stringify(res));
-    } else {
-      Hash[nextPageToken] = Hash[nextPageToken] + 1;
-    }
-    freq++;
-    if (freq === 100) break;
-  }
-};
-
-let videosChannelId = JSON.parse(localStorage.getItem("stat") || "[]");
-const getVideosStatistic = async () => {
-  let statList = JSON.parse(localStorage.getItem("Data") || "[]"),
-    i = 195;
-  while (videosChannelId[i] && i) {
-    const A = await fetch(API_stat(videosChannelId[i]));
-    const B = await A.json();
-    statList.push(B.items[0].statistics);
-    i--;
-    localStorage.setItem("Data", JSON.stringify(statList));
-  }
-};
-getVideosStatistic().then((res) => res);
-const Fn = () => {
-  return new Promise((resolve) => {
-    let res = JSON.parse(localStorage.getItem("Results") || "[]"),
-      final = [],
-      Hash: any = {};
-    let data = JSON.parse(localStorage.getItem("Data") || "[]");
-    res = res.map((item: any, index: number) => {
-      Object.defineProperty(item, "statistics", {
-        value: data[index],
-      });
-      return item;
-    });
-    for (let i = 0; i < res.length; i++) {
-      let curr = res[i].snippet.channelId;
-      if (Hash[curr] === undefined) {
-        Hash[curr] = 1;
-        final.push(res[i]);
+    stat = JSON.parse(localStorage.getItem("stat") || "[]");
+  if (fetchOrder === 1) {
+    for (let i = 0; i < 195; i++) {
+      if (Hash[nextPageToken] === undefined && nextPageToken) {
+        Hash[nextPageToken] = 1;
+        const A = await fetch(API + "&pageToken=" + nextPageToken);
+        const B_ = await A.json();
+        nextPageToken = B_.nextPageToken;
+        B_.items.forEach(async (item: any) => {
+          const A = await fetch(API_stat(item.snippet.channelId));
+          const B = await A.json();
+          stat.push(B.items[0].statistics);
+          item["statistics"] = B.items[0].statistics;
+          res.push(item);
+        });
+        localStorage.setItem("stat", JSON.stringify(stat));
+        localStorage.setItem("Results", JSON.stringify(res));
       } else {
-        Hash[curr] = Hash[curr] + 1;
+        Hash[nextPageToken] = Hash[nextPageToken] + 1;
       }
     }
-    resolve(final);
-  });
+  }
 };
 
-const fetchYoutubeFn = async () => {
-  const A = await Fn();
-  return A;
+const getMappedResult = async () => {
+  let videosChannelStats = JSON.parse(localStorage.getItem("stat") || "[]");
+  let videosChannel = JSON.parse(localStorage.getItem("Results") || "[]");
+  let statList = JSON.parse(localStorage.getItem("Data") || "[]");
+  for (let i = 0; i < videosChannel.length; i++) {
+    let curr = videosChannel[i];
+    curr["statistics"] = videosChannelStats[i];
+    statList.push(curr);
+  }
+  return statList;
 };
 
-export { API, numberToCurrency, fetchLoop, fetchYoutubeFn };
+getMappedResult();
 
-//[2,3,4,5,6,6,7];
+export { API, numberToCurrency, fetchLoop, getMappedResult };

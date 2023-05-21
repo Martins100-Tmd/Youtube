@@ -21,7 +21,7 @@ const VideoCard = () => {
               width: item.snippet.thumbnails.high.width,
             }}
             id={item.id}
-            watchcount={numberToCurrency(item.statistics.viewCount)}
+            watchcount={numberToCurrency(3453555)}
           />
         </div>
       );

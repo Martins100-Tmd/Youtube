@@ -1,6 +1,6 @@
 import { useState, createContext, ReactNode, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchLoop, fetchYoutubeFn } from "../Components/utils/data";
+import { fetchLoop, getMappedResult } from "../Components/utils/data";
 import { ApiStateType } from "../type";
 import { PromiseResponseComponent } from "../Components";
 
@@ -15,7 +15,7 @@ export const ApiContextProvider = ({ children }: { children: ReactNode }) => {
   let { status, data } = useQuery({
     enabled: navigator.onLine,
     queryKey: ["posts"],
-    queryFn: fetchYoutubeFn,
+    queryFn: getMappedResult,
   });
   useEffect(() => {
     fetchLoop().then((res) => res);
