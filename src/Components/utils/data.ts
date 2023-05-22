@@ -1,19 +1,13 @@
 const API = `https://www.googleapis.com/youtube/v3/videos?key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0&part=snippet&chart=mostpopular&maxResult=50&regionCode=US`;
-
 const API_stat = (mole: string) => {
-  return `
-https://www.googleapis.com/youtube/v3/channels?id=${mole}&part=statistics,id&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0`;
+  return `https://www.googleapis.com/youtube/v3/channels?id=${mole}&part=statistics,id&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0`;
 };
+// fetch(
+//   "https://www.googleapis.com/youtube/v3/channels?id=UC-2hhqBG5Su7s91_HmhaODQ&part=statistics,id&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0"
+// )
+//   .then((res) => res.json())
+//   .then((data) => console.log(data));
 
-// const ChannelProfile = `
-// https://www.googleapis.com/youtube/v3/channels?part=snippet&id=UC_x5XG1OV2P6uZZ5FSM9Ttw&
-// fields=items(snippet(thumbnails(high(url))))&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0
-// `;
-fetch(
-  "https://www.googleapis.com/youtube/v3/channels?id=UC-2hhqBG5Su7s91_HmhaODQ&part=statistics,id&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0"
-)
-  .then((res) => res.json())
-  .then((data) => console.log(data));
 /**
  *
  * @param mole - number
@@ -55,17 +49,20 @@ const numberToCurrency = (mole: number) => {
 const fetchLoop = async () => {
   let res = JSON.parse(localStorage.getItem("Results") || "[]");
   let fetchOrder = 0;
-  const firstFetchRequest = await fetch(API);
-  if (firstFetchRequest.ok && res[0] === undefined) {
+  let firstFetchRequest, responseJson;
+  if (navigator.onLine) {
+    firstFetchRequest = await fetch(API);
+  }
+  if (firstFetchRequest && firstFetchRequest.ok && res[0] === undefined) {
     fetchOrder = 1;
     localStorage.setItem("Results", JSON.stringify([]));
     localStorage.setItem("stat", JSON.stringify([]));
   }
-  const responseJson = await firstFetchRequest.json();
-  let nextPageToken = responseJson.nextPageToken,
-    Hash: any = {},
+  let Hash: any = {},
     statistic: any = {};
   if (fetchOrder === 1 && res[0] === undefined) {
+    responseJson = await firstFetchRequest?.json();
+    let nextPageToken = responseJson.nextPageToken;
     for (let i = 0; i < 195; i++) {
       if (Hash[nextPageToken] === undefined && nextPageToken) {
         Hash[nextPageToken] = 1;
