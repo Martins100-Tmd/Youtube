@@ -86,7 +86,6 @@ const fetchLoop = async () => {
 
 const getMappedResult = async () => {
   let videosChannelStats = JSON.parse(localStorage.getItem("stat") || "{}");
-  console.log(videosChannelStats);
   let videosChannel = JSON.parse(localStorage.getItem("Results") || "[]");
   let statList = JSON.parse(localStorage.getItem("Data") || "[]");
   for (let i = 0; i < Object.keys(videosChannelStats).length; i++) {
