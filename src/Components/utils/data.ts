@@ -53,8 +53,7 @@ const numberToCurrency = (mole: number) => {
  * fetchLoop - async function
  */
 const fetchLoop = async () => {
-  let res = JSON.parse(localStorage.getItem("Results") || "[]"),
-    stat = JSON.parse(localStorage.getItem("stat") || "[]");
+  let res = JSON.parse(localStorage.getItem("Results") || "[]");
   let fetchOrder = 0;
   const firstFetchRequest = await fetch(API);
   if (firstFetchRequest.ok && res[0] === undefined) {
@@ -76,11 +75,9 @@ const fetchLoop = async () => {
         B_.items.forEach(async (item: any) => {
           const A = await fetch(API_stat(item.snippet.channelId));
           const B = await A.json();
-          stat.push(B.items[0].statistics);
           res.push(item);
           statistic[B.items[0].id] = B.items[0].statistics;
         });
-        localStorage.setItem("stat", JSON.stringify(stat));
         localStorage.setItem("Results", JSON.stringify(res));
       } else {
         Hash[nextPageToken] = Hash[nextPageToken] + 1;
