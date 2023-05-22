@@ -1,5 +1,4 @@
 import { VideoType } from "../../type";
-
 const RecommendedVideos = ({ image, title, channel, screen, watchcount, id }: VideoType) => {
   return (
     <div

@@ -14,15 +14,35 @@ const Videocard = () => {
 };
 const LoadingComponent = () => {
   return (
-    <section className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 items-center w-full overflow-scroll gap-3">
-      {[1, 2, 3, 4].map((index: number) => {
-        return (
-          <div key={index}>
-            <Videocard />
-          </div>
-        );
-      })}
-    </section>
+    <>
+      <section className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 items-center w-full overflow-scroll gap-3">
+        {[1, 2, 3, 4].map((index: number) => {
+          return (
+            <div key={index}>
+              <Videocard />
+            </div>
+          );
+        })}
+      </section>
+      <section className="sm:grid hidden lg:grid-cols-4 md:grid-cols-2 grid-cols-1 items-center w-full overflow-scroll gap-3">
+        {[1, 2, 3, 4].map((index: number) => {
+          return (
+            <div key={index}>
+              <Videocard />
+            </div>
+          );
+        })}
+      </section>
+      <section className="sm:grid hidden lg:grid-cols-4 md:grid-cols-2 grid-cols-1 items-center w-full overflow-scroll gap-3">
+        {[1, 2, 3, 4].map((index: number) => {
+          return (
+            <div key={index}>
+              <Videocard />
+            </div>
+          );
+        })}
+      </section>
+    </>
   );
 };
 const ErrorComponent = () => {

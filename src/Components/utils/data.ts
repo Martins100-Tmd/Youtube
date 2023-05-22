@@ -81,7 +81,6 @@ const fetchLoop = async () => {
       }
     }
     localStorage.setItem("stat", JSON.stringify(statistic));
-    console.log(statistic, Object.keys(statistic).length);
   }
 };
 
