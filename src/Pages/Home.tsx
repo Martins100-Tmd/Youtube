@@ -2,10 +2,7 @@ import { Categories, NavBarComponent, SideBottom, SideLeft } from "../Components
 import VideoGrid from "../Components/Videos/VidGrid";
 const HTML = document.querySelector("html") as HTMLHtmlElement;
 HTML.className = "bg-black";
-import ApiContext from "../Context/Api";
-import { useContext } from "react";
 const Home = () => {
-  let { apiState } = useContext(ApiContext);
   return (
     <>
       <nav className="bg-black">

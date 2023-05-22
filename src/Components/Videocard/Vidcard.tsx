@@ -6,9 +6,10 @@ const VideoCard = () => {
   let { apiState } = useContext(ApiContext);
   let VideoCardLists,
     loaded = false;
-  if (apiState.status_ === "success") {
+  if (apiState.status_ === "success" && apiState.element[0].kind) {
+    console.log(apiState);
     loaded = true;
-    VideoCardLists = apiState.element.map((item: any, index: number) => {
+    VideoCardLists = apiState.element?.map((item: any, index: number) => {
       return (
         <div key={index} className="w-full">
           <RecommendedVids
