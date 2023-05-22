@@ -6,7 +6,6 @@ import ApiContext from "../Context/Api";
 import { useContext } from "react";
 const Home = () => {
   let { apiState } = useContext(ApiContext);
-  console.log(apiState);
   return (
     <>
       <nav className="bg-black">

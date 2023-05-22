@@ -10,7 +10,7 @@ https://www.googleapis.com/youtube/v3/channels?id=${mole}&part=statistics,id&key
 // fields=items(snippet(thumbnails(high(url))))&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0
 // `;
 fetch(
-  "https://www.googleapis.com/youtube/v3/channels?id=UCmBA_wu8xGg1OfOkfW13Q0Q&part=statistics,id&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0"
+  "https://www.googleapis.com/youtube/v3/channels?id=UC-2hhqBG5Su7s91_HmhaODQ&part=statistics,id&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0"
 )
   .then((res) => res.json())
   .then((data) => console.log(data));
@@ -44,17 +44,20 @@ const numberToCurrency = (mole: number) => {
       some = String(mole).substring(0, 3);
       return some + "M";
     case 10:
-      some = String(mole).substring(0, 2);
+      some = String(mole).substring(0, 1);
       return some + "B";
+    //1234567891
   }
 };
 /**
  * fetchLoop - async function
  */
 const fetchLoop = async () => {
+  let res = JSON.parse(localStorage.getItem("Results") || "[]"),
+    stat = JSON.parse(localStorage.getItem("stat") || "[]");
   let fetchOrder = 0;
   const firstFetchRequest = await fetch(API);
-  if (firstFetchRequest.ok) {
+  if (firstFetchRequest.ok && res[0] === undefined) {
     fetchOrder = 1;
     localStorage.setItem("Results", JSON.stringify([]));
     localStorage.setItem("stat", JSON.stringify([]));
@@ -62,9 +65,8 @@ const fetchLoop = async () => {
   const responseJson = await firstFetchRequest.json();
   let nextPageToken = responseJson.nextPageToken,
     Hash: any = {},
-    res = JSON.parse(localStorage.getItem("Results") || "[]"),
-    stat = JSON.parse(localStorage.getItem("stat") || "[]");
-  if (fetchOrder === 1) {
+    statistic: any = {};
+  if (fetchOrder === 1 && res[0] === undefined) {
     for (let i = 0; i < 195; i++) {
       if (Hash[nextPageToken] === undefined && nextPageToken) {
         Hash[nextPageToken] = 1;
@@ -75,8 +77,8 @@ const fetchLoop = async () => {
           const A = await fetch(API_stat(item.snippet.channelId));
           const B = await A.json();
           stat.push(B.items[0].statistics);
-          item["statistics"] = B.items[0].statistics;
           res.push(item);
+          statistic[B.items[0].id] = B.items[0].statistics;
         });
         localStorage.setItem("stat", JSON.stringify(stat));
         localStorage.setItem("Results", JSON.stringify(res));
@@ -84,21 +86,26 @@ const fetchLoop = async () => {
         Hash[nextPageToken] = Hash[nextPageToken] + 1;
       }
     }
+    localStorage.setItem("stat", JSON.stringify(statistic));
+    console.log(statistic, Object.keys(statistic).length);
   }
 };
 
 const getMappedResult = async () => {
-  let videosChannelStats = JSON.parse(localStorage.getItem("stat") || "[]");
+  let videosChannelStats = JSON.parse(localStorage.getItem("stat") || "{}");
+  console.log(videosChannelStats);
   let videosChannel = JSON.parse(localStorage.getItem("Results") || "[]");
   let statList = JSON.parse(localStorage.getItem("Data") || "[]");
-  for (let i = 0; i < videosChannel.length; i++) {
-    let curr = videosChannel[i];
-    curr["statistics"] = videosChannelStats[i];
-    statList.push(curr);
+  for (let i = 0; i < Object.keys(videosChannelStats).length; i++) {
+    if (videosChannelStats[videosChannel[i].snippet.channelId] !== undefined) {
+      let curr = videosChannel[i];
+      curr["statistics"] = videosChannelStats[videosChannel[i].snippet.channelId];
+      statList.push(curr);
+    }
   }
   return statList;
 };
 
-getMappedResult();
+getMappedResult().then((res) => console.log(res));
 
 export { API, numberToCurrency, fetchLoop, getMappedResult };
