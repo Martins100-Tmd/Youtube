@@ -52,6 +52,7 @@ const fetchLoop = async () => {
   let firstFetchRequest, responseJson;
   if (navigator.onLine) {
     firstFetchRequest = await fetch(API);
+    console.log(firstFetchRequest.json());
   }
   if (firstFetchRequest && firstFetchRequest.ok && res[0] === undefined) {
     fetchOrder = 1;
