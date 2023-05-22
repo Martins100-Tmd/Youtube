@@ -87,7 +87,6 @@ const fetchLoop = async () => {
 const getMappedResult = async () => {
   let videosChannelStats = JSON.parse(localStorage.getItem("stat") || "{}");
   let videosChannel = JSON.parse(localStorage.getItem("Results") || "[]");
-  console.log();
   let statList = JSON.parse(localStorage.getItem("Data") || "[]");
   for (let i = 0; i < Object.keys(videosChannelStats).length; i++) {
     if (videosChannelStats[videosChannel[i].snippet.channelId] !== undefined) {
