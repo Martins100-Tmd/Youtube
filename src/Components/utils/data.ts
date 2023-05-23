@@ -40,7 +40,6 @@ const numberToCurrency = (mole: number) => {
     case 10:
       some = String(mole).substring(0, 1);
       return some + "B";
-    //1234567891
   }
 };
 /**
