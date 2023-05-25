@@ -45,6 +45,23 @@ const numberToCurrency = (mole: number) => {
 /**
  * fetchLoop - async function
  */
+// if (JSON.parse(localStorage.getItem("Results") || "[]")[0]) {
+//   localStorage.setItem("Results", JSON.stringify([]));
+//   localStorage.setItem("stat", JSON.stringify([]));
+// }
+const checkStorage = () => {
+  let len = localStorage.length,
+    arr = [];
+  for (let i = 0; i < len; i++) {
+    arr.push(localStorage.key(i));
+  }
+  if (arr.includes("Results")) return true;
+  return false;
+};
+if (!checkStorage()) {
+  localStorage.setItem("Results", JSON.stringify([]));
+  localStorage.setItem("Results", JSON.stringify([]));
+}
 const fetchLoop = async () => {
   let res = JSON.parse(localStorage.getItem("Results") || "[]");
   let fetchOrder = 0;
@@ -61,8 +78,9 @@ const fetchLoop = async () => {
     statistic: any = {};
   if (fetchOrder === 1 && res[0] === undefined) {
     responseJson = await firstFetchRequest?.json();
-    let nextPageToken = responseJson.nextPageToken;
-    for (let i = 0; i < 195; i++) {
+    let nextPageToken = responseJson.nextPageToken,
+      i = 0;
+    for (i = 0; i < 195; i++) {
       if (Hash[nextPageToken] === undefined && nextPageToken) {
         Hash[nextPageToken] = 1;
         const A = await fetch(API + "&pageToken=" + nextPageToken);
@@ -98,5 +116,4 @@ const getMappedResult = async () => {
 };
 
 getMappedResult().then((res) => console.log(res));
-
 export { API, numberToCurrency, fetchLoop, getMappedResult };
