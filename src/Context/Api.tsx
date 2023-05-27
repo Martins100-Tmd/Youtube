@@ -19,6 +19,7 @@ export const ApiContextProvider = ({ children }: { children: ReactNode }) => {
     queryFn: getMappedResult,
   });
   useEffect(() => {
+    console.log({ Location: "Context useEffect", data, length: localStorage.length });
     fetchLoop().then((res) => res);
     if (status === "loading" && navigator.onLine)
       setApiState({ status_: "loading", element: PromiseResponseComponent.loading, data: false });
@@ -26,7 +27,7 @@ export const ApiContextProvider = ({ children }: { children: ReactNode }) => {
       setApiState({ status_: "error", element: PromiseResponseComponent, data: false });
     if (status === "success" || navigator.onLine)
       setApiState({ status_: "success", element: data, data: true });
-  }, [status, newRequestSignal]);
+  }, [status, newRequestSignal, data]);
   const signalReFetch = () => {
     setNewRequestSignal(Math.floor(Math.random() * 500));
   };

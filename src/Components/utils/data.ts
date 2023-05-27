@@ -1,7 +1,7 @@
 const API = `https://www.googleapis.com/youtube/v3/videos?key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0&part=snippet&chart=mostpopular&maxResult=50&regionCode=US`;
-// const API_stat = (mole: string) => {
-//   return `https://www.googleapis.com/youtube/v3/channels?id=${mole}&part=statistics,id&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0`;
-// };
+const API_stat = (mole: string) => {
+  return `https://www.googleapis.com/youtube/v3/channels?id=${mole}&part=statistics,id&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0`;
+};
 // fetch(
 //   "https://www.googleapis.com/youtube/v3/channels?id=UC-2hhqBG5Su7s91_HmhaODQ&part=statistics,id&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0"
 // )
@@ -51,11 +51,13 @@ const numberToCurrency = (mole: number) => {
 // }
 const checkStorage = () => {
   let len = localStorage.length,
+    res = JSON.parse(localStorage.getItem("Results") || "[]"),
     arr = [];
   for (let i = 0; i < len; i++) {
     arr.push(localStorage.key(i));
   }
-  if (arr.includes("Results")) return true;
+  console.log({ Location: "Data localStorage", arr });
+  if (arr.includes("Results") && res.length !== 0) return true;
   return false;
 };
 if (!checkStorage()) {
@@ -64,42 +66,42 @@ if (!checkStorage()) {
   localStorage.setItem("Data", JSON.stringify([]));
 }
 const fetchLoop = async () => {
-  // let res = JSON.parse(localStorage.getItem("Results") || "[]");
-  // let fetchOrder = 0;
-  // let firstFetchRequest, responseJson;
-  // if (navigator.onLine) {
-  //   firstFetchRequest = await fetch(API);
-  // }
-  // if (firstFetchRequest && firstFetchRequest.ok && res[0] === undefined) {
-  //   fetchOrder = 1;
-  //   localStorage.setItem("Results", JSON.stringify([]));
-  //   localStorage.setItem("stat", JSON.stringify([]));
-  // }
-  // let Hash: any = {},
-  //   statistic: any = {};
-  // if (fetchOrder === 1 && res[0] === undefined) {
-  //   responseJson = await firstFetchRequest?.json();
-  //   let nextPageToken = responseJson.nextPageToken,
-  //     i = 0;
-  //   for (i = 0; i < 195; i++) {
-  //     if (Hash[nextPageToken] === undefined && nextPageToken) {
-  //       Hash[nextPageToken] = 1;
-  //       const A = await fetch(API + "&pageToken=" + nextPageToken);
-  //       const B_ = await A.json();
-  //       nextPageToken = B_.nextPageToken;
-  //       B_.items.forEach(async (item: any) => {
-  //         const A = await fetch(API_stat(item.snippet.channelId));
-  //         const B = await A.json();
-  //         res.push(item);
-  //         statistic[B.items[0].id] = B.items[0].statistics;
-  //       });
-  //       localStorage.setItem("Results", JSON.stringify(res));
-  //     } else {
-  //       Hash[nextPageToken] = Hash[nextPageToken] + 1;
-  //     }
-  //   }
-  //   localStorage.setItem("stat", JSON.stringify(statistic));
-  // }
+  let res = JSON.parse(localStorage.getItem("Results") || "[]");
+  let fetchOrder = 0;
+  let firstFetchRequest, responseJson;
+  if (navigator.onLine) {
+    firstFetchRequest = await fetch(API);
+  }
+  if (firstFetchRequest && firstFetchRequest.ok && res[0] === undefined) {
+    fetchOrder = 1;
+    localStorage.setItem("Results", JSON.stringify([]));
+    localStorage.setItem("stat", JSON.stringify([]));
+  }
+  let Hash: any = {},
+    statistic: any = {};
+  if (fetchOrder === 1 && res[0] === undefined) {
+    responseJson = await firstFetchRequest?.json();
+    let nextPageToken = responseJson.nextPageToken,
+      i = 0;
+    for (i = 0; i < 195; i++) {
+      if (Hash[nextPageToken] === undefined && nextPageToken) {
+        Hash[nextPageToken] = 1;
+        const A = await fetch(API + "&pageToken=" + nextPageToken);
+        const B_ = await A.json();
+        nextPageToken = B_.nextPageToken;
+        B_.items.forEach(async (item: any) => {
+          const A = await fetch(API_stat(item.snippet.channelId));
+          const B = await A.json();
+          res.push(item);
+          statistic[B.items[0].id] = B.items[0].statistics;
+        });
+        localStorage.setItem("Results", JSON.stringify(res));
+      } else {
+        Hash[nextPageToken] = Hash[nextPageToken] + 1;
+      }
+    }
+    localStorage.setItem("stat", JSON.stringify(statistic));
+  }
 };
 
 const getMappedResult = async () => {

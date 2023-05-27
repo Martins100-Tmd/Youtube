@@ -24,3 +24,14 @@ export type VideoType = {
   watchcount: string | undefined | number;
   id: string;
 };
+
+export type Status = {
+  errmsg: string;
+  VideoCardLists: null | ReactNode | object | any;
+  loaded: boolean;
+};
+
+export type PromiseRes = {
+  loading: JSX.Element | object;
+  error: JSX.Element | object;
+};
