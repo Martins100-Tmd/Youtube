@@ -8,10 +8,9 @@ const VideoCard = () => {
   let { apiState } = useContext(ApiContext);
   let VideoCardLists,
     loaded = false;
-  console.log(apiState);
   try {
-    if (apiState.status_ === "success" && apiState.element[0].kind) {
-      console.log(apiState);
+    if (apiState.data) {
+      console.log(apiState.element);
       loaded = true;
       VideoCardLists = apiState.element?.map((item: any, index: number) => {
         return (
@@ -37,6 +36,10 @@ const VideoCard = () => {
     }
   } catch (e: any) {
     seterr(e);
+    if (e) {
+      window.location.reload();
+    }
+    console.log(err);
   }
   return loaded ? (
     <section className="w-full grid md:grid-cols-3 xl:grid-cols-4">{VideoCardLists}</section>

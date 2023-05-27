@@ -11,6 +11,7 @@ export const ApiContextProvider = ({ children }: { children: ReactNode }) => {
   let [apiState, setApiState] = useState<ApiStateType>({
     status_: "loading",
     element: null,
+    data: false,
   });
   let { status, data } = useQuery({
     enabled: navigator.onLine,
@@ -20,11 +21,11 @@ export const ApiContextProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     fetchLoop().then((res) => res);
     if (status === "loading" && navigator.onLine)
-      setApiState({ status_: "loading", element: PromiseResponseComponent.loading });
+      setApiState({ status_: "loading", element: PromiseResponseComponent.loading, data: false });
     if (status === "error" || !navigator.onLine)
-      setApiState({ status_: "error", element: PromiseResponseComponent });
+      setApiState({ status_: "error", element: PromiseResponseComponent, data: false });
     if (status === "success" || navigator.onLine)
-      setApiState({ status_: "success", element: data });
+      setApiState({ status_: "success", element: data, data: true });
   }, [status, newRequestSignal]);
   const signalReFetch = () => {
     setNewRequestSignal(Math.floor(Math.random() * 500));

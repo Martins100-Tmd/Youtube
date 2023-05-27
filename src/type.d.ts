@@ -9,6 +9,7 @@ export type ApiContextType = {};
 export type ApiStateType = {
   status_: string;
   element: any;
+  data: boolean;
 };
 
 //VideoType
