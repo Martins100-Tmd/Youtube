@@ -7,7 +7,6 @@ import { PromiseResponseComponent } from "../Components";
 const ApiContext = createContext(undefined as any);
 
 export const ApiContextProvider = ({ children }: { children: ReactNode }) => {
-  let [newRequestSignal, setNewRequestSignal] = useState(0);
   let [apiState, setApiState] = useState<ApiStateType>({
     status_: "loading",
     element: null,
@@ -19,7 +18,6 @@ export const ApiContextProvider = ({ children }: { children: ReactNode }) => {
     queryFn: getMappedResult,
   });
   useEffect(() => {
-    console.log({ Location: "Context useEffect", data, length: localStorage.length });
     fetchLoop().then((res) => res);
     if (status === "loading" && navigator.onLine)
       setApiState({ status_: "loading", element: PromiseResponseComponent.loading, data: false });
@@ -27,15 +25,8 @@ export const ApiContextProvider = ({ children }: { children: ReactNode }) => {
       setApiState({ status_: "error", element: PromiseResponseComponent, data: false });
     if (status === "success" || navigator.onLine)
       setApiState({ status_: "success", element: data, data: true });
-  }, [status, newRequestSignal, data]);
-  const signalReFetch = () => {
-    setNewRequestSignal(Math.floor(Math.random() * 500));
-  };
-  return (
-    <ApiContext.Provider value={{ apiState, setApiState, signalReFetch }}>
-      {children}
-    </ApiContext.Provider>
-  );
+  }, [status, data]);
+  return <ApiContext.Provider value={{ apiState, setApiState }}>{children}</ApiContext.Provider>;
 };
 
 export default ApiContext;

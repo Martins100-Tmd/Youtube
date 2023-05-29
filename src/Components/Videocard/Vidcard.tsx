@@ -11,12 +11,10 @@ const VideoCard = () => {
     loaded: false,
   });
   let { apiState } = useContext(ApiContext);
-  console.log(apiState);
-  console.log("::");
   useEffect(() => {
     try {
-      if (apiState.data) {
-        console.log(apiState.element);
+      if (apiState.data && apiState.element) {
+        console.log(apiState);
         setstatus((prev: any) => ({ ...prev, loaded: true }));
         let Lists = apiState.element?.map((item: any, index: number) => {
           return (
@@ -45,11 +43,21 @@ const VideoCard = () => {
       setstatus((prev: any) => ({ ...prev, errmsg: e }));
       console.log(status.errmsg);
     }
-  }, [apiState.status_, apiState.data]);
+  }, [apiState.status_, apiState.data, apiState.element]);
   return status.loaded ? (
-    <section className="w-full grid md:grid-cols-3 xl:grid-cols-4">{status.VideoCardLists}</section>
+    <section className="w-full grid md:grid-cols-3 xl:grid-cols-4">
+      <div className="text-white text-2xl">
+        {JSON.stringify(apiState.element)?.substring(0, 40)}
+      </div>
+      <div className="text-white text-2xl">{JSON.stringify(apiState)}</div>
+      {status.VideoCardLists}
+    </section>
   ) : (
     <section className="w-full overflow-scroll">
+      <div className="text-white text-2xl">
+        {JSON.stringify(apiState.element)?.substring(0, 40)}
+      </div>
+      <div className="text-white text-2xl">{JSON.stringify(apiState)}</div>
       <div>{status.VideoCardLists}</div>
       <div>{PromiseResponseComponent.error}</div>
     </section>

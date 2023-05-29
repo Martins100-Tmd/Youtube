@@ -2,11 +2,6 @@ const API = `https://www.googleapis.com/youtube/v3/videos?key=AIzaSyBBSfTYz9KYQK
 const API_stat = (mole: string) => {
   return `https://www.googleapis.com/youtube/v3/channels?id=${mole}&part=statistics,id&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0`;
 };
-// fetch(
-//   "https://www.googleapis.com/youtube/v3/channels?id=UC-2hhqBG5Su7s91_HmhaODQ&part=statistics,id&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0"
-// )
-//   .then((res) => res.json())
-//   .then((data) => console.log(data));
 
 /**
  *
@@ -45,45 +40,24 @@ const numberToCurrency = (mole: number) => {
 /**
  * fetchLoop - async function
  */
-// if (JSON.parse(localStorage.getItem("Results") || "[]")[0]) {
-//   localStorage.setItem("Results", JSON.stringify([]));
-//   localStorage.setItem("stat", JSON.stringify([]));
-// }
-const checkStorage = () => {
-  let len = localStorage.length,
-    res = JSON.parse(localStorage.getItem("Results") || "[]"),
-    arr = [];
-  for (let i = 0; i < len; i++) {
-    arr.push(localStorage.key(i));
-  }
-  console.log({ Location: "Data localStorage", arr });
-  if (arr.includes("Results") && res.length !== 0) return true;
-  return false;
-};
-if (!checkStorage()) {
-  localStorage.setItem("Results", JSON.stringify([]));
-  localStorage.setItem("stat", JSON.stringify([]));
-  localStorage.setItem("Data", JSON.stringify([]));
-}
-const fetchLoop = async () => {
-  let res = JSON.parse(localStorage.getItem("Results") || "[]");
+// localStorage.clear();
+let res = JSON.parse(localStorage.getItem("Results") || "[]");
+async function fetchLoop() {
   let fetchOrder = 0;
   let firstFetchRequest, responseJson;
   if (navigator.onLine) {
     firstFetchRequest = await fetch(API);
   }
-  if (firstFetchRequest && firstFetchRequest.ok && res[0] === undefined) {
+  if (firstFetchRequest && firstFetchRequest.ok && res.length === 0) {
     fetchOrder = 1;
-    localStorage.setItem("Results", JSON.stringify([]));
-    localStorage.setItem("stat", JSON.stringify([]));
   }
   let Hash: any = {},
     statistic: any = {};
-  if (fetchOrder === 1 && res[0] === undefined) {
+  if (fetchOrder === 1) {
     responseJson = await firstFetchRequest?.json();
     let nextPageToken = responseJson.nextPageToken,
       i = 0;
-    for (i = 0; i < 195; i++) {
+    for (i; i < 20; i++) {
       if (Hash[nextPageToken] === undefined && nextPageToken) {
         Hash[nextPageToken] = 1;
         const A = await fetch(API + "&pageToken=" + nextPageToken);
@@ -102,9 +76,13 @@ const fetchLoop = async () => {
     }
     localStorage.setItem("stat", JSON.stringify(statistic));
   }
+}
+const sleepTime = (ms: number) => {
+  return new Promise((res) => setTimeout(res, ms));
 };
-
-const getMappedResult = async () => {
+async function getMappedResult() {
+  await fetchLoop().then((res) => res);
+  await sleepTime(2000);
   let videosChannelStats = JSON.parse(localStorage.getItem("stat") || "{}");
   let videosChannel = JSON.parse(localStorage.getItem("Results") || "[]");
   let statList = JSON.parse(localStorage.getItem("Data") || "[]");
@@ -116,7 +94,7 @@ const getMappedResult = async () => {
     }
   }
   return statList;
-};
+}
 
 getMappedResult().then((res) => console.log(res));
 export { API, numberToCurrency, fetchLoop, getMappedResult };
