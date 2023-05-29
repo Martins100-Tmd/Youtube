@@ -1,7 +1,7 @@
 import { PromiseResponseComponent, RecommendedVids, vid } from "..";
 import ApiContext from "../../Context/Api";
 import { useContext, useEffect } from "react";
-import { numberToCurrency } from "../utils/data";
+import { numberToCurrency, randomViewCount } from "../utils/data";
 import { useState } from "react";
 import { Status } from "../../type";
 const VideoCard = () => {
@@ -29,7 +29,7 @@ const VideoCard = () => {
                   width: item.snippet.thumbnails.high.width,
                 }}
                 id={item.id}
-                watchcount={numberToCurrency(item.statistics.viewCount)}
+                watchcount={numberToCurrency(randomViewCount())}
               />
             </div>
           );
@@ -43,21 +43,11 @@ const VideoCard = () => {
       setstatus((prev: any) => ({ ...prev, errmsg: e }));
       console.log(status.errmsg);
     }
-  }, [apiState.status_, apiState.data, apiState.element]);
+  }, [apiState]);
   return status.loaded ? (
-    <section className="w-full grid md:grid-cols-3 xl:grid-cols-4">
-      <div className="text-white text-2xl">
-        {JSON.stringify(apiState.element)?.substring(0, 40)}
-      </div>
-      <div className="text-white text-2xl">{JSON.stringify(apiState)}</div>
-      {status.VideoCardLists}
-    </section>
+    <section className="w-full grid md:grid-cols-3 xl:grid-cols-4">{status.VideoCardLists}</section>
   ) : (
     <section className="w-full overflow-scroll">
-      <div className="text-white text-2xl">
-        {JSON.stringify(apiState.element)?.substring(0, 40)}
-      </div>
-      <div className="text-white text-2xl">{JSON.stringify(apiState)}</div>
       <div>{status.VideoCardLists}</div>
       <div>{PromiseResponseComponent.error}</div>
     </section>

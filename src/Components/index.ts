@@ -48,3 +48,6 @@ export { default as VideoCards } from "./Videocard/Vidcard.tsx";
 export { default as Homepage } from "../Pages/Home";
 //************ Search ***************
 export { default as SearchBarPage } from "../Pages/Search";
+
+//************ Local ***************
+export { default as Local } from "../Pages/Local";

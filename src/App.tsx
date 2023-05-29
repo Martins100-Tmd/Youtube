@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Homepage, SearchBarPage } from "./Components";
+import { Homepage, Local, SearchBarPage } from "./Components";
 import { ModeContextProvider } from "./Context/Mode";
 import { Route, Routes } from "react-router-dom";
 import { ApiContextProvider } from "./Context/Api";
@@ -13,6 +13,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/searchpage" element={<SearchBarPage />} />
+            <Route path="/local" element={<Local />} />
           </Routes>
         </ModeContextProvider>
       </ApiContextProvider>

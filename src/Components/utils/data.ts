@@ -1,8 +1,4 @@
 const API = `https://www.googleapis.com/youtube/v3/videos?key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0&part=snippet&chart=mostpopular&maxResult=50&regionCode=US`;
-const API_stat = (mole: string) => {
-  return `https://www.googleapis.com/youtube/v3/channels?id=${mole}&part=statistics,id&key=AIzaSyBBSfTYz9KYQKxdUj6GsSCCQW-tut_F7d0`;
-};
-
 /**
  *
  * @param mole - number
@@ -37,6 +33,10 @@ const numberToCurrency = (mole: number) => {
       return some + "B";
   }
 };
+
+function randomViewCount() {
+  return Math.floor(Math.random() * 34978383);
+}
 /**
  * fetchLoop - async function
  */
@@ -51,8 +51,7 @@ async function fetchLoop() {
   if (firstFetchRequest && firstFetchRequest.ok && res.length === 0) {
     fetchOrder = 1;
   }
-  let Hash: any = {},
-    statistic: any = {};
+  let Hash: any = {};
   if (fetchOrder === 1) {
     responseJson = await firstFetchRequest?.json();
     let nextPageToken = responseJson.nextPageToken,
@@ -64,37 +63,21 @@ async function fetchLoop() {
         const B_ = await A.json();
         nextPageToken = B_.nextPageToken;
         B_.items.forEach(async (item: any) => {
-          const A = await fetch(API_stat(item.snippet.channelId));
-          const B = await A.json();
           res.push(item);
-          statistic[B.items[0].id] = B.items[0].statistics;
         });
         localStorage.setItem("Results", JSON.stringify(res));
       } else {
         Hash[nextPageToken] = Hash[nextPageToken] + 1;
       }
     }
-    localStorage.setItem("stat", JSON.stringify(statistic));
   }
 }
-const sleepTime = (ms: number) => {
-  return new Promise((res) => setTimeout(res, ms));
-};
+
 async function getMappedResult() {
   await fetchLoop().then((res) => res);
-  await sleepTime(2000);
-  let videosChannelStats = JSON.parse(localStorage.getItem("stat") || "{}");
   let videosChannel = JSON.parse(localStorage.getItem("Results") || "[]");
-  let statList = JSON.parse(localStorage.getItem("Data") || "[]");
-  for (let i = 0; i < Object.keys(videosChannelStats).length; i++) {
-    if (videosChannelStats[videosChannel[i].snippet.channelId] !== undefined) {
-      let curr = videosChannel[i];
-      curr["statistics"] = videosChannelStats[videosChannel[i].snippet.channelId];
-      statList.push(curr);
-    }
-  }
-  return statList;
+  return videosChannel;
 }
 
 getMappedResult().then((res) => console.log(res));
-export { API, numberToCurrency, fetchLoop, getMappedResult };
+export { API, numberToCurrency, fetchLoop, getMappedResult, randomViewCount };
