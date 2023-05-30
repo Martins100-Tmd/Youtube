@@ -7,7 +7,12 @@ const NavBarComponent = () => {
       className={`flex flex-row items-center w-full p-4 justify-between border-b-4 border-zinc-700 bg-[#121212]
       `}
     >
-      <div className={"sm:w-[30%]"}>
+      <div
+        className={"sm:w-[30%] cursor-pointer"}
+        onClick={() => {
+          window.location.href = "https://www.youtube.com/";
+        }}
+      >
         <div className={`flex flex-row items-center sm:w-[17%] w-2/5`}>
           <i
             className={`

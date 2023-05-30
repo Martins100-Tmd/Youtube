@@ -78,6 +78,4 @@ async function getMappedResult() {
   let videosChannel = JSON.parse(localStorage.getItem("Results") || "[]");
   return videosChannel;
 }
-
-getMappedResult().then((res) => console.log(res));
 export { API, numberToCurrency, fetchLoop, getMappedResult, randomViewCount };

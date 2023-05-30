@@ -1,7 +1,7 @@
 import { VideoType } from "../../type";
 const RecommendedVideos = ({ image, title, channel, screen, watchcount, id }: VideoType) => {
   return (
-    <div
+    <section
       className={
         "flex flex-col items-center sm:w-auto w-full min-w-[150px] h-auto mr-3 cursor-pointer"
       }
@@ -23,9 +23,11 @@ const RecommendedVideos = ({ image, title, channel, screen, watchcount, id }: Vi
       </div>
       <div className="flex flex-row items-start w-full gap-3">
         <img
+          width={"auto"}
+          height={"auto"}
           src={image}
           alt="channelProfileImage"
-          className="w-10 h-10 rounded-full object-cover place-self-start self-center"
+          className="w-8 h-8 rounded-full object-cover place-self-start self-center mr-3"
         />
         <div className="flex flex-col items-start w-full mt-1 self-start">
           <div className="flex flex-row items-stretch justify-between w-full">
@@ -45,7 +47,7 @@ const RecommendedVideos = ({ image, title, channel, screen, watchcount, id }: Vi
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

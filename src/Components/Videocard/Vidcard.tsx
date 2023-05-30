@@ -1,4 +1,4 @@
-import { PromiseResponseComponent, RecommendedVids, vid } from "..";
+import { PromiseResponseComponent, RecommendedVids } from "..";
 import ApiContext from "../../Context/Api";
 import { useContext, useEffect } from "react";
 import { numberToCurrency, randomViewCount } from "../utils/data";
@@ -14,7 +14,6 @@ const VideoCard = () => {
   useEffect(() => {
     try {
       if (apiState.data && apiState.element) {
-        console.log(apiState);
         setstatus((prev: any) => ({ ...prev, loaded: true }));
         let Lists = apiState.element?.map((item: any, index: number) => {
           return (
@@ -22,8 +21,8 @@ const VideoCard = () => {
               <RecommendedVids
                 title={item.snippet.title}
                 channel={item.snippet.channelTitle}
-                // image={item.snippet.thumbnails.high.url}
-                image={vid}
+                image={item.snippet.thumbnails.high.url}
+                // image={vid}
                 screen={{
                   height: item.snippet.thumbnails.high.height,
                   width: item.snippet.thumbnails.high.width,
@@ -41,7 +40,6 @@ const VideoCard = () => {
       }
     } catch (e: any) {
       setstatus((prev: any) => ({ ...prev, errmsg: e }));
-      console.log(status.errmsg);
     }
   }, [apiState]);
   return status.loaded ? (
