@@ -40,7 +40,7 @@ function randomViewCount() {
 /**
  * fetchLoop - async function
  */
-// localStorage.clear();
+
 let res = JSON.parse(localStorage.getItem("Results") || "[]");
 async function fetchLoop() {
   let fetchOrder = 0;

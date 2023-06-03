@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 const Categories = () => {
   let nav = useNavigate();
   return (
-    <div className="sm:hidden flex flex-row items-center w-full overflow-scroll gap-5 py-3">
+    <section className="sm:hidden flex flex-row items-center w-full overflow-scroll gap-5 py-3">
       <div className="w-auto bg-white rounded-lg py-0.5 px-3" onClick={() => nav("/local")}>
         <i className="text-xl material-icons text-black">explore</i>
       </div>
@@ -33,7 +33,7 @@ const Categories = () => {
       <div className="w-auto p-2 bg-[#1c1c1c] rounded-xl">
         <p className="text-xs font-hev font-thin text-white text-center w-full">Architecture</p>
       </div>
-    </div>
+    </section>
   );
 };
 
